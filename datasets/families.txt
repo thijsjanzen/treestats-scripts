@@ -1,0 +1,55 @@
+Statistic	Information	Family	Balance	Index						
+area_per_pair	Topology	Distance matrix	YES	Shape						
+average_leaf_depth	Topology	Node Depth	YES	Imbalance						
+avg_ladder	Topology	Node information	YES	Shape						
+b1	Topology	Node Depth	YES	Balance						
+b2	Topology	Node Depth	YES	Balance						
+beta	Topology	Node information	YES	Balance						
+blum	Topology	Node information	YES	Imbalance						
+cherries	Topology	Node information	YES	Shape						
+colless	Topology	Node information	YES	Imbalance						
+crown_age	Branching times	Branching times	NO	no						
+diameter	Topology	Network science	YES	Shape						
+eigenvector	Topology + branching times	Network science	NO	no						
+ew_colless	Topology	Node information	YES	Imbalance						
+gamma	Branching times	Branching times	NO	no						
+i_stat	Topology	Node information	YES	Shape						 
+il_number	Topology	Node information	YES	Shape						
+imbalance_steps	Topology	Node information	YES	Balance						
+j_one	Topology	Node information	YES	Balance						
+j_stat	Topology + branching times	Distance matrix	NO	no						
+laplace_spectrum_a	Topology + branching times	Distance matrix	NO	no						
+laplace_spectrum_e	Topology + branching times	Distance matrix	NO	no						
+laplace_spectrum_g	Topology + branching times	Distance matrix	NO	no						
+laplace_spectrum_p	Topology + branching times	Distance matrix	NO	no						
+max_betweenness	Topology	Network science	NO	no						
+max_closeness	Topology + branching times	Network science	NO	Shape						
+max_del_width	Topology	Node Depth	YES	Shape						
+max_depth	Topology	Node Depth	YES	Imbalance						
+max_ladder	Topology	Node information	YES	Shape						
+max_width	Topology	Node Depth	YES	Balance						
+mean_branch_length	Topology + branching times	Branching times	NO	no						
+mean_branch_length_ext	Topology + branching times	Branching times	NO	no						
+mean_branch_length_int	Topology + branching times	Branching times	NO	no						
+mntd	Topology + branching times	Distance matrix	NO	no						
+mpd	Topology + branching times	Distance matrix	NO	no						
+nltt_base	Branching times	Branching times	NO	no						
+number_of_lineages	Topology + branching times	None	NO	no						
+phylogenetic_div	Topology + branching times	Branching times	NO	no						
+pigot_rho	Branching times	Branching times	NO	no						
+pitchforks	Topology	Node information	YES	Shape						
+psv	Topology + branching times	Distance matrix	NO	no						
+rogers	Topology	Node information	YES	Imbalance						
+rquartet	Topology	Node information	YES	Balance						
+sackin	Topology	Node Depth	YES	Imbalance						
+stairs	Topology	Node information	YES	Imbalance						
+stairs2	Topology	Node information	YES	Balance						
+symmetry_nodes	Topology	Node information	YES	Imbalance						
+tot_coph	Topology	Distance matrix	YES	Imbalance						
+tree_height	Branching times	Branching times	NO	no						
+var_branch_length	Topology + branching times	Branching times	NO	no						
+var_branch_length_ext	Topology + branching times	Branching times	NO	no						
+var_branch_length_int	Topology + branching times	Branching times	NO	no						
+var_depth	Topology	Node Depth	YES	Imbalance						
+vpd	Topology + branching times	Distance matrix	NO	no						
+wiener	Topology + branching times	Network science	NO	Shape						
