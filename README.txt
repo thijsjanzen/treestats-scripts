@@ -13,4 +13,4 @@ The folder 'R packages' contains tar ball installation packages for the followin
 - bissesim  - unpublished package used for fast simulation of the BiSSE model
 - physim    - unpublished package used for fast simulation of the DDD and PBD model
 
-To execute the code for figure 5, please place the file trees.rds, which can be downloaded separately if available.
+To execute the code for figure 5, please place the file trees.rds, which can be received upon request
