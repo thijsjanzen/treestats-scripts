@@ -20,8 +20,8 @@ get_all_cor <- function(cor1, label) {
 
 all_found <- c()
 
-for (x in c("Mammals", "Birds", "Amphibians","Squamates")) {
-  file_name <- paste0("../Figure_3/cor_emp_", x, ".txt")
+for (x in c("Mammals", "Birds", "Ferns", "Vascular Plants", "Cartaliginous Fish", "Ray finned Fish", "Amphibians")) {
+  file_name <- paste0("../Figure_3/cor_emp_phy_", x, ".txt")
   cor2 <- read.table(file_name)
   local_names <- names(cor2)
 

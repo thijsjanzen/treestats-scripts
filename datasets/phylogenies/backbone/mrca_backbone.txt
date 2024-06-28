@@ -1,0 +1,8 @@
+x	birds	mammals	ferns	vascular_plants	ray_finned_fish	sharks	amphibia
+birds	0	310	1547	1547	450	495.2	340
+mammals	310	0	1547	1547	424	495.2	340
+ferns	1547	1547	0	435	1547	1547	1547
+vascular_plants	1547	1547	435	0	1547	1547	1547
+ray_finned_fish	450	424	1547	1547	0	495.2	424
+sharks	495.2	495.2	1547	1547	495.2	0	495.2
+amphibia	340	340	1547	1547	424	495.2	0

@@ -6,14 +6,17 @@ require(ggfortify)
 require(factoextra)
 
 # read master tree from datelife analysis (see elsewhere)
-pruned_tree <- readRDS("../datasets/master_tree.rds")
+pruned_tree <- ape::read.tree("../datasets/new_data/backbone/taxon_backbone.tree")
 
 
-# tree collection files from Condamine et al. 2019
-tree_collection_files <- c("../datasets/MammalTrees.rds",
-                           "../datasets/BirdTrees.rds",
-                           "../datasets/AmphibiaTrees.rds",
-                           "../datasets/SquamateTrees.rds")
+# tree collection files
+tree_collection_files <- c("../datasets/new_data/fracced/amphibia_fracced.rds",
+                           "../datasets/new_data/fracced/birds_fracced.rds",
+                           "../datasets/new_data/fracced/ferns_fracced.rds",
+                           "../datasets/new_data/fracced/mammals_fracced.rds",
+                           "../datasets/new_data/fracced/ray_finned_fish_fracced.rds",
+                           "../datasets/new_data/fracced/sharks_fracced.rds",
+                           "../datasets/new_data/fracced/vascular_plants_fracced.rds")
 
 found_stats <- c()
 
@@ -21,26 +24,31 @@ for (i in 1:length(tree_collection_files)) {
   tree_collection <- readRDS(tree_collection_files[i])
 
   families <- names(tree_collection)
-
+  cat(i, "\n")
   for (j in 1:length(tree_collection)) {
 
-    focal_tree <- tree_collection[[j]]$tree
+    focal_tree <- tree_collection[[j]]
 
-    all_stats <- treestats::calc_all_stats(focal_tree, FALSE)
-    to_add <- unlist(all_stats)
-    to_add <- c(families[j], to_add)
+    if (length(focal_tree$tip.label) >= 10) {
 
-    found_stats <- rbind(found_stats, to_add)
+      all_stats <- treestats::calc_all_stats(focal_tree, FALSE)
+      to_add <- unlist(all_stats)
+      to_add <- c(families[j], to_add)
+
+      found_stats <- rbind(found_stats, to_add)
+    }
   }
 }
 
 colnames(found_stats) <- c("Family", names(all_stats))
 found_stats <- as_tibble(found_stats)
 
+found_stats <- found_stats[!is.na(found_stats$sackin), ]
+
 # make a second tree with the family names:
 taxa_tree <- pruned_tree
 
-taxa_names <- c("Mammals", "Birds", "Amphibians", "Squamates")
+taxa_names <- c("Amphibians", "Birds", "Ferns", "Mammals", "Ray finned Fish", "Cartaliginous Fish", "Flowering Plants")
 
 found_stats$Taxa <- NA
 
@@ -57,11 +65,23 @@ for (i in 1:length(tree_collection_files)) {
 
 # make sure everything is numeric:
 found_stats2 <- found_stats %>%
-  mutate_at(2:55, as.numeric)
+  mutate_at(2:71, as.numeric)
 
 # select focal data:
-df <- data.matrix(found_stats2[, 2:55])
+df <- data.matrix(found_stats2[, 2:71])
 rownames(df) <- found_stats2$Family
+# now, we correct everything for size
+for (i in 1:ncol(df)) {
+  y <- df[, i]
+  x <- df[, 11] # number of lineages
+  A <- lm(y~x)
+  df[, i] <- A$residuals
+}
+
+df <- df[, -11] # number of lineages
+
+
+
 df <- scale(df)
 
 
@@ -69,31 +89,40 @@ df <- scale(df)
 pca.res <- phytools::phyl.pca(tree = pruned_tree,
                               Y = df)
 
-diag(pca.res$Eval)[c(53, 54)] <- 0
+diag(pca.res$Eval)[which(diag(pca.res$Eval) < 0)] <- 0
 
 vz <- phytools::as.princomp(pca.res)
 
-color_used <- ggpubr::get_palette(palette = "RdBu", k = 99)
+color_used <- ggpubr::get_palette(palette = "RdBu", k = 6)
+
+
+found_stats2$Taxa_2 <- factor(found_stats2$Taxa, levels = c("Birds", "Mammals", "Ferns", "Flowering Plants", "Cartaliginous Fish", "Ray finned Fish", "Amphibians"))
+
+manual_colors2 <- c( "#CC500A", #birds
+                     "#9F55D6", # mammals
+                     "#D4E995", # ferns
+                     "#145F16", # plants 2
+                     "#6CA8E9", # fish 1
+                     "#3A7DB1", # fish 2
+                     "grey")    # Amphibians
 
 p2 <- autoplot(vz,
                data = found_stats2,
-               colour = 'Taxa',
+               colour = 'Taxa_2',
                loadings = FALSE,
                loadings.label = FALSE,
                frame = TRUE,
                frame.type = 'norm') +
   theme_minimal() +
-  #scale_color_manual(values = color_used) +
-  #scale_fill_manual(values = color_used) +
-  #scale_color_brewer(type = "div", palette = 10) +
-  #scale_fill_brewer(type = "div", palette = 10) +
-  scale_fill_viridis_d(begin = 0.25, end = 0.8) +
-  scale_color_viridis_d(begin = 0.25, end = 0.8) +
-  theme(legend.position = "top")
+  scale_color_manual(values = manual_colors2) +
+  scale_fill_manual(values = manual_colors2) +
+  theme(legend.position = "top") +
+  labs(colour = "") +
+  labs(fill = "")
 p2
 
 ggsave(filename = "fig_2_c.pdf",
-       width = 5, height = 5)
+       width = 6, height = 6)
 
 
 ncp <- 10
@@ -163,7 +192,7 @@ ggsave(p2, filename = "figure_S1.pdf", width = 12, height = 10)
 
 breakz <- seq(0, 1, length.out = 99)
 
-res.cor3 <- read.table("../Figure_3/master_cor.txt")
+res.cor3 <- read.table("../Figure_3/master_cor_phy.txt")
 to_remove <- which(colnames(res.cor3) == "number_of_lineages")
 res.cor3 <- res.cor3[-to_remove, -to_remove]
 
@@ -176,6 +205,8 @@ hm1 <- pheatmap::pheatmap(mat = res.cor4,
                           breaks = breakz,
                           treeheight_col = 0,
                           treeheight_row = 0,
+                        #  clustering_distance_rows = "correlation",
+                       #   clustering_distance_cols = "correlation",
                           clustering_method = "average",
                           fontsize_col = 8,
                           fontsize_row = 8)

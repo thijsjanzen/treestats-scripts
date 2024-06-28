@@ -30,12 +30,15 @@ for (x in unique(found$statistic)) {
     strip_colz <- c(strip_colz, colz[2])
   }
   if (ax$type == "None") {
-    strip_colz <- c(strip_colz, colz[3])
+  #  strip_colz <- c(strip_colz, colz[3])
   }
 }
 
 strip <- strip_themed(background_x = elem_list_rect(fill = strip_colz))
-found %>%
+
+found2 <- subset(found, found$type != "None")
+
+found2 %>%
   ggplot(aes(x = number_of_lineages, y = mean_val, col = model)) +
   geom_point(size = 0.5) +
   geom_line(linewidth = 0.75) +
@@ -49,4 +52,4 @@ found %>%
   ylab("") +
   labs(col = "")
 
-ggsave(filename = "Figure_4.pdf", width = 14, height = 18)
+ggsave(filename = "Figure_4.pdf", width = 14, height = 10)

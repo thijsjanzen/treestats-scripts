@@ -43,7 +43,7 @@ make_plot <- function(family_name, res.dist, xmax) {
 
   for_plot2 <- as_tibble(ddata$labels)
 
-  fp1 <- cbind(df_tip_info$Statistic, df_tip_info$Balance)
+  fp1 <- cbind(df_tip_info$Statistic, df_tip_info$Balance_Fischer)
   colnames(fp1) <- c("label", "balance")
   for_plot3 <- left_join(for_plot2, fp1, copy = TRUE)
 
@@ -135,15 +135,13 @@ get_plot <- function(family_name, res.dist, ref_clustering) {
   return(p6)
 }
 
-
-
 cor1 <- read.table("overall_cor.txt")
 cor1 <- as.matrix(cor1)
 
 cor1 <- as.data.frame(cor1)
 cor1 <- as_tibble(cor1)
 cor1 <- cor1 %>%
-  mutate_at(1:51, as.numeric)
+  mutate_at(1:67, as.numeric)
 
 cor.dist <- stats::as.dist(1 - abs(as.matrix(cor1)))
 
@@ -164,7 +162,7 @@ for (x in c("BD", "DDD", "PBD","SSE")) {
 }
 
 library(gridExtra)
-pdf("Figure_5.pdf", width = 25, height = 12)
+pdf("Figure_5_70.pdf", width = 25, height = 12)
 grid.arrange(ref_plot$plot, arrangeGrob(all_plots[[1]], all_plots[[2]],
                                               all_plots[[3]], all_plots[[4]]), ncol = 2)
 dev.off()

@@ -16,6 +16,14 @@ calc_max_ladder <- function(phy) {
   return(max(ladders))
 }
 
+calc_colless_quad <- function(phy) {
+  return(treebalance::collessI(phy, method = "quadratic"))
+}
+
+calc_colless_corr <- function(phy) {
+  return(treebalance::collessI(phy, method = "corrected"))
+}
+
 calc_mean_br <- function(phy) {
   mbr <- mean(phy$edge.length)
   return(mbr)
@@ -94,6 +102,30 @@ calc_i <- function(phy) {
   return(treebalance::IbasedI(phy, method = "mean", correction = "prime",
                               logs = FALSE))
 }
+
+calc_minmax_adjacency <- function(phy) {
+  df <- as.data.frame(cbind(phy$edge,
+                            weight = phy$edge.length))
+  g <- igraph::graph_from_data_frame(df, directed = FALSE)
+
+  adj_mat <- igraph::as_adjacency_matrix(g, attr = "weight", sparse = FALSE)
+  ref <- eigen(adj_mat)$values
+  ref <- round(ref, digits = 10)
+  return(ref)
+}
+
+calc_minmax_laplace <- function(phy) {
+  df <- as.data.frame(cbind(phy$edge,
+                            weight = phy$edge.length))
+  g <- igraph::graph_from_data_frame(df, directed = FALSE)
+
+  lapl_mat <- igraph::laplacian_matrix(g, normalized = FALSE, sparse = FALSE)
+  ref <- eigen(lapl_mat)$values
+  ref <- round(ref, digits = 10)
+  return(ref)
+}
+
+
 
 tree_list <- list()
 used_ntaxa <- c()
@@ -263,11 +295,35 @@ for (i in 1:length(tree_list)) {
                  compare_speed(tree_list[[i]], treeCentrality::computeDiameter,  treestats::diameter, used_ntaxa[i], "diameter"))
 
   found <- rbind(found,
-                 compare_speed(tree_list[[i]], treeCentrality::computeEigenvector,  treestats::eigen_vector, used_ntaxa[i], "eigen_vector"))
+                 compare_speed(tree_list[[i]], treeCentrality::computeEigenvector,  treestats::eigen_centrality, used_ntaxa[i], "eigen_centrality"))
 
   found <- rbind(found,
                  compare_speed(tree_list[[i]], calc_mean_br,  treestats::mean_branch_length, used_ntaxa[i], "mean_branch_length"))
 
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], treebalance::avgVertDep, treestats::avg_vert_depth, used_ntaxa[i], "avg_vert_depth"))
+
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], treebalance::totPathLen, treestats::tot_path_length, used_ntaxa[i], "tot_path_length"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], treebalance::totIntPathLen, treestats::tot_internal_path, used_ntaxa[i], "tot_internal_path"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], treebalance::mWovermD, treestats::mw_over_md, used_ntaxa[i], "mw_over_md"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], calc_colless_quad, treestats::colless_quad, used_ntaxa[i], "colless_quad"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], calc_colless_corr, treestats::colless_corr, used_ntaxa[i], "colless_corr"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], calc_minmax_adjacency, treestats:::minmax_adj, used_ntaxa[i], "minmax_adj"))
+
+  found <- rbind(found,
+                 compare_speed(tree_list[[i]], calc_minmax_laplace, treestats:::minmax_laplace, used_ntaxa[i], "minmax_laplace"))
 }
 
 colnames(found) <- c("ntips", "method", "time", "treestatsfunction")
@@ -312,3 +368,11 @@ p2 <- found %>%
 p2
 
 ggsave(p2, file = "Figure_S4.pdf", width = 8, height = 8)
+
+
+found %>%
+  filter(ntips %in% c(1000)) %>%
+  filter(method == "treestats") %>%
+  group_by(ntips, method, treestatsfunction) %>%
+  summarise("mean_time" = mean(time)) %>%
+  arrange(desc(mean_time))

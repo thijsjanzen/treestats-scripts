@@ -1,38 +1,49 @@
+pruned_tree <- ape::read.tree("../datasets/new_data/backbone/taxon_backbone.tree")
 
 
-pruned_tree <-  readRDS("../datasets/pruned_tree.rds")
+# tree collection files
+tree_collection_files <- c("../datasets/new_data/fracced/amphibia_fracced.rds",
+                           "../datasets/new_data/fracced/birds_fracced.rds",
+                           "../datasets/new_data/fracced/ferns_fracced.rds",
+                           "../datasets/new_data/fracced/mammals_fracced.rds",
+                           "../datasets/new_data/fracced/ray_finned_fish_fracced.rds",
+                           "../datasets/new_data/fracced/sharks_fracced.rds",
+                           "../datasets/new_data/fracced/vascular_plants_fracced.rds")
 
-tree_collection_files <- c("../datasets/MammalTrees.rds",
-                           "../datasets/BirdTrees.rds",
-                           "../datasets/AmphibiaTrees.rds",
-                           "../datasets/SquamateTrees.rds")
+taxa_names <- c("Amphibians", "Birds", "Ferns", "Mammals", "Ray finned Fish", "Cartaliginous Fish", "Vascular Plants")
+
 
 found_stats <- c()
 for (i in 1:length(tree_collection_files)) {
   tree_collection <- readRDS(tree_collection_files[i])
 
   families <- names(tree_collection)
-
+  cat(i, "\n")
   for (j in 1:length(tree_collection)) {
-    focal_tree <- tree_collection[[j]]$tree
 
-    all_stats <- treestats::calc_all_stats(focal_tree, FALSE)
-    to_add <- unlist(all_stats)
-    to_add <- c(families[j], to_add)
+    focal_tree <- tree_collection[[j]]
 
-    found_stats <- rbind(found_stats, to_add)
+    if (length(focal_tree$tip.label) >= 10) {
+
+      all_stats <- treestats::calc_all_stats(focal_tree, FALSE)
+      to_add <- unlist(all_stats)
+      to_add <- c(families[j], to_add)
+
+      found_stats <- rbind(found_stats, to_add)
+    }
   }
 }
 
 
 require(tidyverse)
 
+num_stats <- length(names(all_stats))
+
 colnames(found_stats) <- c("Family", names(all_stats))
 found_stats <- as_tibble(found_stats)
 
 taxa_tree <- pruned_tree
 
-taxa_names <- c("Mammals","Birds", "Amphibians", "Squamates")
 
 found_stats$Taxa <- NA
 
@@ -45,20 +56,44 @@ for (i in 1:length(tree_collection_files)) {
 
   indices2 <- which(found_stats$Family %in% families)
   found_stats$Taxa[indices2] <- taxa_names[i]
-
 }
 
-found_stats2 <- found_stats %>%
-  mutate_at(2:55, as.numeric)
+found_stats <- found_stats %>%
+  filter(!is.na(sackin))
 
-df <- as.data.frame(found_stats2[, 2:55])
+found_stats2 <- found_stats %>%
+  mutate_at(2:(num_stats + 1), as.numeric)
+
+df <- as.data.frame(found_stats2[, 2:(num_stats + 1)])
 
 res.cor <- stats::cor(df, method = "pearson")
 
 res.cor2 <- res.cor
 
 get_cor <- function(local_stats, local_tree) {
-  res.cor <- stats::cor(as.data.frame(local_stats), method = "pearson")
+
+  local_stats <- local_stats[!is.na(local_stats$gamma), ]
+  local_stats <- local_stats[!is.na(local_stats$sackin), ]
+
+  to_keep <- local_stats$Family
+  to_drop <- local_tree$tip.label[!(local_tree$tip.label %in% local_stats$Family)]
+
+  if (length(to_drop)) {
+    cat("dropping: " ,to_drop, "\n")
+    local_tree <- ape::drop.tip(local_tree, to_drop)
+  }
+
+  testit::assert(all.equal(local_stats$Family, local_tree$tip.label))
+
+  sp <- local_stats$Family
+  bm <- ape::corBrownian(value = 1, phy = local_tree, form =~ sp)
+
+  local_stats2 <- local_stats %>%
+    mutate_at(2:(num_stats + 1), as.numeric)
+
+  local_stats2 <- as.data.frame(local_stats2[, 2:(num_stats + 1)])
+
+  res.cor <- stats::cor(as.data.frame(local_stats2), method = "pearson")
 
   res.cor2 <- res.cor
 
@@ -70,25 +105,17 @@ get_cor <- function(local_stats, local_tree) {
       stat1 <- colnames(res.cor)[i]
       stat2 <- colnames(res.cor)[j]
 
-      if (stat1 == "number_of_lineages") {
-        if (stat2 != "number_of_lineages") {
-          x <- unlist(as.vector(local_stats[stat1]))
-          y <- unlist(as.vector(local_stats[stat2]))
-          z <- unlist(as.vector(local_stats["number_of_lineages"]))
+      if (stat1 != stat2) {
+        if (stat1 != "number_of_lineages" && stat2 != "number_of_lineages") {
+          x <- unlist(as.vector(local_stats2[stat1]))
+          y <- unlist(as.vector(local_stats2[stat2]))
+          z <- unlist(as.vector(local_stats2["number_of_lineages"]))
 
-          a1 <- nlme::gls(y~z, correlation = ape::corBrownian(1, local_tree))
-          res.cor2[i, j] <- a1$coefficients[[2]]
-        }
-      } else if (stat2 != "number_of_lineages") {
-        if (i != j) {
-          x <- unlist(as.vector(local_stats[stat1]))
-          y <- unlist(as.vector(local_stats[stat2]))
-          z <- unlist(as.vector(local_stats["number_of_lineages"]))
-
-          a1 <- nlme::gls(y~z, correlation = ape::corBrownian(1, local_tree))
-          a2 <- nlme::gls(x~z, correlation = ape::corBrownian(1, local_tree))
+          a1 <- nlme::gls(y~z, correlation = bm)
+          a2 <- nlme::gls(x~z, correlation = bm)
 
           found_cor <- cor(a1$residuals, a2$residuals)
+
 
           res.cor2[i, j] <- found_cor
         }
@@ -98,9 +125,9 @@ get_cor <- function(local_stats, local_tree) {
   return(res.cor2)
 }
 
-master_cor <- get_cor(df, pruned_tree)
+master_cor <- get_cor(found_stats2, pruned_tree)
 
-write.table(master_cor, "master_cor.txt", quote = FALSE)
+write.table(master_cor, "master_cor_phy.txt", quote = FALSE)
 
 # now we go over the taxa
 for (x in unique(found_stats$Taxa)) {
@@ -108,16 +135,10 @@ for (x in unique(found_stats$Taxa)) {
    stat_subset <- subset(found_stats, found_stats$Taxa == x)
    focal_families <- as.vector(stat_subset$Family)
 
-   focal_data <- stat_subset %>%
-     select(-c("Family", "Taxa"))
-
-   focal_data <- focal_data %>%
-     mutate_at(1:54, as.numeric)
-
    master_tree <- pruned_tree
    to_remove <- master_tree$tip.label[!(master_tree$tip.label %in% focal_families)]
    focal_tree <- ape::drop.tip(master_tree, to_remove)
 
-   local_cor <- get_cor(focal_data, focal_tree)
-   write.table(local_cor, paste0("cor_emp_", x,".txt"), quote = FALSE)
+   local_cor <- get_cor(stat_subset, focal_tree)
+   write.table(local_cor, paste0("cor_emp_phy_", x,".txt"), quote = FALSE)
 }
