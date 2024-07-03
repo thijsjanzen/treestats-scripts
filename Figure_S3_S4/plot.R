@@ -342,7 +342,8 @@ p1 <- found %>%
   stat_smooth() +
   scale_x_log10() +
   scale_y_log10() +
-  scale_color_viridis_d(option = "A", begin = 0.4, end = 0.7) +
+  scale_color_manual(values = c("#274a76", "#99aabe" )) +
+ # scale_color_viridis_d(option = "A", begin = 0.4, end = 0.7) +
   facet_wrap(~treestatsfunction, scales = "free", ncol = 6) +
   theme_classic() +
   theme(legend.position = "top") +
@@ -350,6 +351,7 @@ p1 <- found %>%
   xlab("Number of extant tips")
 
 ggsave(p1, file = "Figure_S3.pdf", width = 18, height = 14)
+ggsave(p1, file = "Figure_S3.png", width = 18, height = 14)
 
 p2 <- found %>%
   filter(ntips %in% c(1000)) %>%
@@ -358,7 +360,7 @@ p2 <- found %>%
   spread(key = method, value = mean_time) %>%
   mutate("speedup" = `R equivalent` / treestats) %>%
   ggplot(aes(x = stats::reorder(treestatsfunction, -speedup), y = speedup)) +
-  geom_point() +
+  geom_point(col = "#274a76") +
   geom_abline(intercept = 0, slope = 0, lty = 2) +
   scale_y_log10() +
   xlab("Summary Statistic") +
@@ -376,3 +378,7 @@ found %>%
   group_by(ntips, method, treestatsfunction) %>%
   summarise("mean_time" = mean(time)) %>%
   arrange(desc(mean_time))
+
+write_tsv(found, file = "timings.txt")
+
+
