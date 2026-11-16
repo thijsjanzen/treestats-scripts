@@ -7,9 +7,11 @@ require(castor)
 require(treebalance)
 require(ape)
 
+require(treeCentrality)
+
 # RUtreebalance.R was downloaded from:
 # https://github.com/robjohnnoble/RUtreebalance
-source("/Users/thijsjanzen/Library/CloudStorage/Dropbox/projects/treestats/RUtreebalance-main/RUtreebalance.R")
+source("https://raw.githubusercontent.com/robjohnnoble/RUtreebalance/refs/heads/main/RUtreebalance.R")
 
 calc_max_ladder <- function(phy) {
   ladders <- phyloTop::ladderSizes(phy)$ladderSizes
@@ -350,8 +352,8 @@ p1 <- found %>%
   ylab("Time per tree (seconds)") +
   xlab("Number of extant tips")
 
-ggsave(p1, file = "Figure_S3.pdf", width = 18, height = 14)
-ggsave(p1, file = "Figure_S3.png", width = 18, height = 14)
+# ggsave(p1, file = "Figure_S3.pdf", width = 18, height = 14)
+# ggsave(p1, file = "Figure_S3.png", width = 18, height = 14)
 
 p2 <- found %>%
   filter(ntips %in% c(1000)) %>%
@@ -369,7 +371,7 @@ p2 <- found %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.35))
 p2
 
-ggsave(p2, file = "Figure_S4.pdf", width = 8, height = 8)
+# ggsave(p2, file = "Figure_S4.pdf", width = 8, height = 8)
 
 
 found %>%
@@ -379,6 +381,17 @@ found %>%
   summarise("mean_time" = mean(time)) %>%
   arrange(desc(mean_time))
 
-write_tsv(found, file = "timings.txt")
+found %>%
+  filter(ntips %in% c(129)) %>%
+  filter(method == "treestats") %>%
+  group_by(ntips, method, treestatsfunction) %>%
+  summarise("median_time" = median(time)) %>%
+  ggplot(aes(x = stats::reorder(treestatsfunction, -median_time), y = median_time)) +
+    geom_point(col = "#274a76") +
+    geom_abline(intercept = 0, slope = 0, lty = 2) +
+    scale_y_log10() +
+    theme_classic() +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.35))
+# write_tsv(found, file = "timings.txt")
 
 
