@@ -1,72 +1,72 @@
 Statistic	Information	Family	Balance_Fischer	Normalization			
-number_of_lineages	Topology_and_branch lengths	None	No index	None			
-eigen_centralityW	Topology_and_branch lengths	Network_science	No index	None			
-max_adj	Topology_and_branch lengths	Network_science	No index	None			
-max_closenessW	Topology_and_branch lengths	Network_science	Shape	None			
-max_laplace	Topology_and_branch lengths	Network_science	No index	None			
-min_adj	Topology_and_branch lengths	Network_science	No index	None			
-min_laplace	Topology_and_branch lengths	Network_science	No index	None			
-wiener	Topology_and_branch lengths	Network_science	Shape	None			
-j_stat	Topology_and_branch lengths	Distance_matrix	No index	None			
-laplace_spectrum_a	Topology_and_branch lengths	Distance_matrix	No index	None			
-laplace_spectrum_e	Topology_and_branch lengths	Distance_matrix	No index	None			
-laplace_spectrum_g	Topology_and_branch lengths	Distance_matrix	No index	None			
-laplace_spectrum_p	Topology_and_branch lengths	Distance_matrix	No index	None			
-mntd	Topology_and_branch lengths	Distance_matrix	No index	None			
-mpd	Topology_and_branch lengths	Distance_matrix	No index	Tips			
-psv	Topology_and_branch lengths	Distance_matrix	No index	Tips			 
-vpd	Topology_and_branch lengths	Distance_matrix	No index	None			
-mean_branch_length	Topology_and_branch lengths	Branching_times	No index	None			
-mean_branch_length_ext	Topology_and_branch lengths	Branching_times	No index	None			
-mean_branch_length_int	Topology_and_branch lengths	Branching_times	No index	None			
-phylogenetic_div	Topology_and_branch lengths	Branching_times	No index	None			
-treeness	Topology_and_branch lengths	Branching_times	No index	None			
-var_branch_length	Topology_and_branch lengths	Branching_times	No index	None			
-var_branch_length_ext	Topology_and_branch lengths	Branching_times	No index	None			
-var_branch_length_int	Topology_and_branch lengths	Branching_times	No index	None			
-inv_branch_dist	Topology_and_branch lengths	Branching_times	No index	None			
+crown_age	Branching_times	Branching_times	No_index	None			
+gamma	Branching_times	Branching_times	No_index	None			
+nltt_base	Branching_times	Branching_times	No_index	None			
+pigot_rho	Branching_times	Branching_times	No_index	None			
+tree_height	Branching_times	Branching_times	No_index	None			
 avg_ladder	Topology	Node_information	Shape	None			
-beta	Topology	Node_information	No index	None			
-sshape	Topology	Node_information	Imbalance	Yule			
 cherries	Topology	Node_information	Shape	Yule			
+double_cherries	Topology	Node_information	Shape	None			
+four_prong	Topology	Node_information	Shape	None			
+il_number	Topology	Node_information	Shape	Tips			
+max_ladder	Topology	Node_information	Shape	None			
+pitchforks	Topology	Node_information	Shape	Tips			
+root_imbalance	Topology	Node_information	Shape	None			
+max_del_width	Topology	Node_depth	Shape	Tips			
+diameter	Topology	Network_science	Shape	None			
+max_betweenness	Topology	Network_science	Shape	Tips			 
+max_closeness	Topology	Network_science	Shape	Tips			
+area_per_pair	Topology	Distance_matrix	Shape	Yule			
+beta	Topology	Node_information	No_index	None			
+imbalance_steps	Topology	Node_information	No_index	Tips			
+j_one	Topology	Node_information	No_index	None			
+eigen_centrality	Topology	Network_science	No_index	None			
+sshape	Topology	Node_information	Imbalance	Yule			
 colless	Topology	Node_information	Imbalance	Yule			
 colless_corr	Topology	Node_information	Imbalance	None			
 colless_quad	Topology	Node_information	Imbalance	None			
-double_cherries	Topology	Node_information	Shape	None			
 ew_colless	Topology	Node_information	Imbalance	Yule			
-four_prong	Topology	Node_information	Shape	None			
 i_stat	Topology	Node_information	Imbalance	None			
-il_number	Topology	Node_information	Shape	Tips			
-imbalance_steps	Topology	Node_information	No index	Tips			
-j_one	Topology	Node_information	No index	None			
-max_ladder	Topology	Node_information	Shape	None			
-mw_over_md	Topology	Node_information	Balance	None			
-pitchforks	Topology	Node_information	Shape	Tips			
 rogers	Topology	Node_information	Imbalance	Yule			
-root_imbalance	Topology	Node_information	Shape	None			
-rquartet	Topology	Node_information	Balance	Yule			
 stairs	Topology	Node_information	Imbalance	Yule			
-stairs2	Topology	Node_information	Balance	Yule			
 symmetry_nodes	Topology	Node_information	Imbalance	Tips			
 average_leaf_depth	Topology	Node_depth	Imbalance	Yule			
 avg_vert_depth	Topology	Node_depth	Imbalance	Yule			
-b1	Topology	Node_depth	Balance	Tips			
-b2	Topology	Node_depth	Balance	Yule			
-max_del_width	Topology	Node_depth	Shape	Tips			
 max_depth	Topology	Node_depth	Imbalance	Tips			
-max_width	Topology	Node_depth	Balance	Tips			
 sackin	Topology	Node_depth	Imbalance	Yule			
 tot_internal_path	Topology	Node_depth	Imbalance	Yule			
 tot_path	Topology	Node_depth	Imbalance	Yule			
 var_depth	Topology	Node_depth	Imbalance	Yule			
-diameter	Topology	Network_science	Shape	None			
-eigen_centrality	Topology	Network_science	No index	None			
-max_betweenness	Topology	Network_science	Shape	Tips			
-max_closeness	Topology	Network_science	Shape	Tips			
-area_per_pair	Topology	Distance_matrix	Shape	Yule			
 tot_coph	Topology	Distance_matrix	Imbalance	Yule			
-crown_age	Branching_times	Branching_times	No index	None			
-gamma	Branching_times	Branching_times	No index	None			
-nltt_base	Branching_times	Branching_times	No index	None			
-pigot_rho	Branching_times	Branching_times	No index	None			
-tree_height	Branching_times	Branching_times	No index	None			
+mw_over_md	Topology	Node_information	Balance	None			
+rquartet	Topology	Node_information	Balance	Yule			
+stairs2	Topology	Node_information	Balance	Yule			
+b1	Topology	Node_depth	Balance	Tips			
+b2	Topology	Node_depth	Balance	Yule			
+max_width	Topology	Node_depth	Balance	Tips			
+max_closenessW	Topology_and_branch_lengths	Network_science	Shape	None			
+wiener	Topology_and_branch_lengths	Network_science	Shape	None			
+number_of_lineages	Topology_and_branch_lengths	None	No_index	None			
+eigen_centralityW	Topology_and_branch_lengths	Network_science	No_index	None			
+max_adj	Topology_and_branch_lengths	Network_science	No_index	None			
+max_laplace	Topology_and_branch_lengths	Network_science	No_index	None			
+min_adj	Topology_and_branch_lengths	Network_science	No_index	None			
+min_laplace	Topology_and_branch_lengths	Network_science	No_index	None			
+j_stat	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+laplace_spectrum_a	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+laplace_spectrum_e	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+laplace_spectrum_g	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+laplace_spectrum_p	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+mntd	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+mpd	Topology_and_branch_lengths	Distance_matrix	No_index	Tips			
+psv	Topology_and_branch_lengths	Distance_matrix	No_index	Tips			
+vpd	Topology_and_branch_lengths	Distance_matrix	No_index	None			
+mean_branch_length	Topology_and_branch_lengths	Branching_times	No_index	None			
+mean_branch_length_ext	Topology_and_branch_lengths	Branching_times	No_index	None			
+mean_branch_length_int	Topology_and_branch_lengths	Branching_times	No_index	None			
+phylogenetic_div	Topology_and_branch_lengths	Branching_times	No_index	None			
+treeness	Topology_and_branch_lengths	Branching_times	No_index	None			
+var_branch_length	Topology_and_branch_lengths	Branching_times	No_index	None			
+var_branch_length_ext	Topology_and_branch_lengths	Branching_times	No_index	None			
+var_branch_length_int	Topology_and_branch_lengths	Branching_times	No_index	None			
+inv_branch_dist	Topology_and_branch_lengths	Branching_times	No_index	None			
