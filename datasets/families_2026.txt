@@ -70,4 +70,4 @@ var_branch_length	Topology_and_branch_lengths	Branching_times	No_index	None
 var_branch_length_ext	Topology_and_branch_lengths	Branching_times	No_index	None			
 var_branch_length_int	Topology_and_branch_lengths	Branching_times	No_index	None			
 inv_branch_dist	Topology_and_branch_lengths	Branching_times	No_index	None			
-max_clade_dist	Topology	Node_depth	Balance	Yule			
+max_clade_basis	Topology	Node_depth	Balance	Yule			
